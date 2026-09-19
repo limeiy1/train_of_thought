@@ -1162,3 +1162,80 @@ table.data-table tr:hover td {
     color: #333 !important;
   }
 }
+
+/* ==========================================================================
+   Prediction Result Card & Official Tables
+   ========================================================================== */
+.prediction-export-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.prediction-export-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn-download-primary {
+  background: #10b981;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.btn-download-primary:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+}
+
+.official-result-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.official-result-table th {
+  background: #f1f5f9;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--border-color);
+  font-size: 0.86rem;
+}
+
+.official-result-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.official-result-table tr:hover td {
+  background: #f8fafc;
+}
+
+.official-result-table td.row-num {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+
+
