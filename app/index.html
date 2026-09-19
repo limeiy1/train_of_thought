@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Train of Thought | Rail Condition Monitoring (CdM) Studio</title>
+  <meta name="description" content="AI-Powered Railway Fleet Condition Monitoring and Anomaly Detection Portal for Non-Technical Users.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Application Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="brand-title-group">
+          <h1>
+            Train Condition Monitoring
+          </h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-help" class="btn-secondary" title="View subsystem guide and instructions">
+          <span>ℹ️</span> How It Works
+        </button>
+      </div>
+    </header>
+
+    <!-- Subsystem Selector Section -->
+    <section class="subsystems-section">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <span>1. Select Rail Subsystem</span>
+        </h2>
+        <p class="section-hint">Choose which onboard subsystem model to deploy for analysis:</p>
+      </div>
+
+      <div class="subsystems-grid">
+        <!-- Subsystem 1: Door -->
+        <div class="subsystem-card disabled" data-subsystem="door">
+          <div class="card-top">
+            <span class="badge-not-implemented">Model not implemented</span>
+          </div>
+          <h3 class="subsystem-title">Door</h3>
+          <p class="subsystem-desc">Segment continuous door cycles and detect abnormal mechanical resistance or jamming.</p>
+        </div>
+
+        <!-- Subsystem 2: ACV -->
+        <div class="subsystem-card active" data-subsystem="acv">
+          <div class="active-check">✓</div>
+          <div class="card-top">
+            <span class="task-tag tag-fault">Model Ready</span>
+          </div>
+          <h3 class="subsystem-title">ACV</h3>
+          <p class="subsystem-desc">Thermodynamic multi-car telemetry analysis to isolate and localize the specific rail car with a refrigerant leak.</p>
+        </div>
+
+        <!-- Subsystem 3: Rail Corrugation -->
+        <div class="subsystem-card disabled" data-subsystem="corrugation">
+          <div class="card-top">
+            <span class="badge-not-implemented">Model not implemented</span>
+          </div>
+          <h3 class="subsystem-title">Rail Corrugation</h3>
+          <p class="subsystem-desc">Multi-channel axle-box vibration and shock analysis to classify track condition.</p>
+        </div>
+
+        <!-- Subsystem 4: SHM -->
+        <div class="subsystem-card disabled" data-subsystem="shm">
+          <div class="card-top">
+            <span class="badge-not-implemented">Model not implemented</span>
+          </div>
+          <h3 class="subsystem-title">SHM</h3>
+          <p class="subsystem-desc">Acumulative fatigue damage estimation from dynamic stress time series.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Ingestion & Dropzone Section -->
+    <section class="ingestion-panel">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <span>2. Ingest ACV Telemetry Data</span>
+        </h2>
+        <p class="section-hint">Upload your Excel (.xlsx) file to run fault localisation:</p>
+      </div>
+
+      <div class="upload-flow-grid single-col">
+        <!-- Dropzone Area -->
+        <div class="dropzone-container" id="dropzone">
+          <input type="file" id="file-input" class="hidden-file-input" accept=".xlsx">
+          <div class="dropzone-icon">📁</div>
+          <h3 class="dropzone-prompt">Drag & Drop File (.xlsx) Here</h3>
+          <p class="dropzone-subprompt">or click to browse your local files</p>
+          <div class="file-types-list">
+            <span class="file-type-badge">.XLSX</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- File Inspection Status Bar -->
+      <div class="file-inspector-bar" id="file-inspector" style="display: none;">
+        <div class="file-info-group">
+          <div class="file-avatar">📊</div>
+          <div>
+            <div class="file-meta-name" id="file-name-display">telemetry.xlsx</div>
+            <div class="file-meta-details" id="file-meta-display">Ready for ACV inference</div>
+          </div>
+        </div>
+        <div class="action-run-group">
+          <button id="btn-run-inference" class="btn-primary-run" disabled>
+            ⚡ Run ACV Prediction
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results & Predictions Dashboard -->
+    <main class="results-container" id="results-container">
+      <!-- Section A: Top Verdict Banner -->
+      <section class="verdict-banner banner-warning" id="verdict-banner">
+        <div class="verdict-left">
+          <div class="verdict-icon-box" id="verdict-icon">❄️</div>
+          <div class="verdict-headline-group">
+            <span class="verdict-label" id="verdict-label">ACV REFRIGERANT LEAK LOCALISATION</span>
+            <h2 class="verdict-title" id="verdict-title">Suspected Faulty Car: Car --</h2>
+            <p class="verdict-summary" id="verdict-summary">Ranking: --</p>
+          </div>
+        </div>
+        <div class="verdict-score-badge">
+          <div class="score-title" id="score-title">Most Likely Faulty Car</div>
+          <div class="score-val" id="score-val">--</div>
+        </div>
+      </section>
+
+      <!-- Section B: Official Prediction Preview (Matching format from screenshot) -->
+      <section class="prediction-export-card">
+        <div class="prediction-export-header">
+          <div>
+            <h3 style="font-size: 1.5rem; font-weight: 600; color: var(--text-primary);">Prediction Result</h3>
+          </div>
+          <button id="btn-export-csv" class="btn-export btn-download-primary" title="Download prediction result as CSV">
+            Download Prediction (CSV)
+          </button>
+        </div>
+        <div class="custom-table-responsive">
+          <table class="data-table official-result-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th>file_id</th>
+                <th>ranked_cars</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-num">1</td>
+                <td id="export-file-id">--</td>
+                <td id="export-ranked-cars" class="mono-ranking">--</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section C: Detailed Ranking Table (car_id, fault_score, rank) -->
+      <section class="table-panel">
+        <div class="table-panel-header">
+          <div class="table-title">
+            <h3>Car Fault Ranking Details</h3>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin-top: 2px;">Fault scores based on mean cooling error (°C)</p>
+          </div>
+        </div>
+        <div class="custom-table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Car ID</th>
+                <th>Fault Score (Mean Cooling Error)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="scores-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section D: Actions -->
+      <section class="export-bar" style="justify-content: flex-end;">
+        <div class="export-buttons">
+          <button id="btn-reset" class="btn-export" title="Test another file or reset view">
+            <span>🔄</span> Test Another File
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Help & Guide Modal -->
+    <div class="modal-overlay" id="modal-help">
+      <div class="modal-content">
+        <button class="modal-close-btn" id="btn-close-modal">&times;</button>
+        <h2 style="font-size: 1.25rem; margin-bottom: 12px; color: var(--text-primary);">How to use this train condition monitoring app</h2>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; margin-bottom: 16px;">
+          This web application enables railway fleet managers, depot engineers, and maintenance operators to deploy trained machine learning models across four independent rail vehicle subsystems with ease.
+        </p>
+
+        <h3 style="font-size: 0.95rem; color: var(--accent-blue); margin: 14px 0 6px;">1. Subsystems Covered</h3>
+        <ul style="color: var(--text-secondary); font-size: 0.84rem; line-height: 1.6; padding-left: 20px; margin-bottom: 16px;">
+          <li><strong>Door:</strong> Detects open/close cycles in a continuous telemetry stream and flags mechanical resistance anomalies (such as debris obstruction or actuator friction).</li>
+          <li><strong>ACV:</strong> Evaluates multi-car cooling telemetry to isolate and localize which specific car is suffering from a refrigerant leak.</li>
+          <li><strong>Rail Corrugation:</strong> Classifies track condition into Normal, Side I Corrugation (Left), or Side II Corrugation (Right) from axle-box vibration + shock.</li>
+          <li><strong>SHM:</strong> Uses cumulative fatigue damage regression on dynamic stress time series.</li>
+        </ul>
+
+        <h3 style="font-size: 0.95rem; color: var(--accent-blue); margin: 14px 0 6px;">2. How to generate a prediction</h3>
+        <ol style="color: var(--text-secondary); font-size: 0.84rem; line-height: 1.6; padding-left: 20px; margin-bottom: 16px;">
+          <li>Click any of the 4 subsystem cards at the top.</li>
+          <li>Either drag and drop a <code>.csv</code> file or click on the box to upload from your computer.</li>
+          <li>Click <strong>"Run Prediction"</strong>.</li>
+          <li>View the results, and download the predictions as a <code>.CSV</code>.</li>
+          <li>Click on "Test Another File" to restart.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Strict Mode Diagnostic Error Modal -->
+    <div class="modal-overlay" id="modal-diagnostic">
+      <div class="modal-content" style="max-width: 680px;">
+        <button class="modal-close-btn" id="btn-close-diagnostic">&times;</button>
+        <div style="margin-bottom: 14px;">
+          <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; background: var(--accent-red-subtle); color: var(--accent-red); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--accent-red-border);">⚠️ Strict Mode Diagnostic</span>
+          <h2 style="font-size: 1.25rem; margin-top: 8px; color: var(--accent-red);">Python Model Execution Error</h2>
+          <p style="color: var(--text-secondary); font-size: 0.86rem; margin-top: 4px;">
+            An error occurred while executing the model in <code id="diagnostic-module" style="background: var(--bg-main); padding: 2px 6px; border-radius: 4px; font-weight: 600; color: var(--text-primary);">models/subsystem_model.py</code>.
+          </p>
+        </div>
+
+        <div>
+          <div style="background: var(--accent-red-subtle); border: 1px solid var(--accent-red-border); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+            <div style="font-weight: 600; color: var(--accent-red); font-size: 0.88rem;" id="diagnostic-error-msg">ValueError: ...</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px;" id="diagnostic-hint">Run python3 models/... to reproduce locally.</div>
+          </div>
+
+          <label style="font-size: 0.76rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Python Traceback Log:</label>
+          <pre id="diagnostic-traceback" style="background: #0f172a; color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 0.76rem; overflow-x: auto; max-height: 220px; line-height: 1.45; margin-top: 6px; font-family: monospace; white-space: pre-wrap;"></pre>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
+          <button class="btn btn-secondary" id="btn-copy-traceback" style="font-size: 0.82rem;">📋 Copy Traceback</button>
+          <button class="btn btn-primary" id="btn-dismiss-diagnostic" style="font-size: 0.82rem;">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
