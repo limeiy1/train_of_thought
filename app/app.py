@@ -33,7 +33,7 @@ except Exception as exc:
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(APP_DIR)
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))
 
 # Ensure proper MIME types
 mimetypes.add_type("application/javascript", ".js")
